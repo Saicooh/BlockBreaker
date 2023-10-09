@@ -25,7 +25,8 @@ public class Block
        cc = new Color(0.1f+r.nextFloat(1), r.nextFloat(1), r.nextFloat(1), 10);
   
     }
-    public void draw(ShapeRenderer shape){
+    public void draw(ShapeRenderer shape)
+    {
     	shape.setColor(cc);
         shape.rect(x, y, width, height);
     }
