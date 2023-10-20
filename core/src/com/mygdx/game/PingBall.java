@@ -73,7 +73,7 @@ public class PingBall
 	        if(collidesWith(block))
 			{
 	            ySpeed = - ySpeed;
-	            block.destroyed = true;
+	            block.setDestroyed(true);
 	        }
 	    }
 	    private boolean collidesWith(Block bb)

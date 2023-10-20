@@ -32,6 +32,4 @@ public class Paddle extends GameObject implements Movable
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) move(-15, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) move(15, 0);
     }
-    
-    
 }

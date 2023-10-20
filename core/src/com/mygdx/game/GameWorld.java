@@ -70,7 +70,7 @@ public class GameWorld {
         for (Block b : blocks)
         {
             ball.checkCollision(b);
-            if (b.destroyed)
+            if (b.isDestroyed())
             {
                 soundManager.play("collision");
                 puntaje++;
