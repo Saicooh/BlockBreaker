@@ -8,7 +8,8 @@ public abstract class GameObject
     protected int x, y, width, height;
     protected Color color;
 
-    public GameObject(int x, int y, int width, int height, Color color) {
+    public GameObject(int x, int y, int width, int height, Color color)
+    {
         this.x = x;
         this.y = y;
         this.width = width;
