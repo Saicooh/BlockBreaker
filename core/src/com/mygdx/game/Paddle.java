@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Paddle extends GameObject implements Movable
 {
-    public Paddle(int x, int y, int width, int height)
-    {
-        super(x, y, width, height, Color.BLUE);
-    }
+    private static final int VELOCIDAD_PADDLE = 15;
+    public Paddle(int x, int y, int width, int height) { super(x, y, width, height, Color.BLUE); }
 
     public void draw(ShapeRenderer shape)
     {
@@ -29,7 +27,7 @@ public class Paddle extends GameObject implements Movable
 
     public void handleInput()
     {
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) move(-15, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) move(15, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) move(-VELOCIDAD_PADDLE, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) move(VELOCIDAD_PADDLE, 0);
     }
 }

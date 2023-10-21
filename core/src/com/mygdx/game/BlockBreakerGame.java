@@ -18,8 +18,8 @@ public class BlockBreakerGame extends ApplicationAdapter
 	@Override
 	public void render()
 	{
-		world.update(Gdx.graphics.getDeltaTime());
-		renderer.render(Gdx.graphics.getDeltaTime());
+		world.update();
+		renderer.render();
 	}
 
 	@Override

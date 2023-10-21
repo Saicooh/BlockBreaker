@@ -5,82 +5,120 @@ import com.badlogic.gdx.Input;
 
 import java.util.ArrayList;
 
-public class GameWorld {
+public class GameWorld
+{
     private PingBall ball;
-    private Paddle pad;
-    private ArrayList<Block> blocks = new ArrayList<>();
-    private int vidas;
-    private int puntaje;
-    private int nivel;
+    private final Paddle pad;
+    private final ArrayList<Block> blocks = new ArrayList<>();
+    private int vidas, puntaje, nivel;
 
     private final SoundManager soundManager;
+
+    private final CollisionManager collisionManager;
+
+    private static final int VIDAS_INICIALES = 3;
+    private static final int ANCHO_PADDLE = 100;
+    private static final int ALTO_PADDLE = 10;
+
+    private static final int TAMANO_BOLA = 10;
 
     public GameWorld()
     {
         nivel = 1;
         crearBloques(2 + nivel);
-        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, 10, 5, 7, true);
-        pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, 100, 10);
-        vidas = 3;
+        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 5, 7, true);
+        pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
+        vidas = VIDAS_INICIALES;
         puntaje = 0;
 
         soundManager = new SoundManager();
+        collisionManager = new CollisionManager();
     }
 
-    public void update(float delta)
+    public void handleGameOver()
     {
-        // Handle user input to move the paddle
-        pad.handleInput();
+        if (vidas > 0) return;
 
-        // Monitorear inicio del juego
+        soundManager.play("gameover");
+        vidas = VIDAS_INICIALES;
+        nivel = 1;
+        puntaje = 0;
+        crearBloques(2 + nivel);
+    }
+
+    public void handleStart()
+    {
         if (ball.estaQuieto())
         {
             ball.setXY(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11);
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) ball.setEstaQuieto(false);
         }
-        else ball.update();
+        else ball.move(ball.getXSpeed(), ball.getYSpeed());
+    }
 
-        // Verificar si se fue la bola x abajo
+    public void handleOutOfBounds(Paddle pad)
+    {
         if (ball.getY() < 0)
         {
             vidas--;
-            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 5, 7, true);
+            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 5, 7, true);
         }
+    }
 
-        // Verificar game over
-        if (vidas <= 0)
-        {
-            soundManager.play("gameover");
-            vidas = 3;
-            nivel = 1;
-            puntaje = 0;
-            crearBloques(2 + nivel);
-        }
-
-        // Verificar si el nivel se terminó
+    public void handleLevelFinished()
+    {
         if (blocks.isEmpty())
         {
             nivel++;
             crearBloques(2 + nivel);
             ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 5, 7, true);
         }
+    }
 
-        // Verificar colisiones
+    void handleBlockCollision()
+    {
         ArrayList<Block> blocksToRemove = new ArrayList<>();
-        for (Block b : blocks)
+
+        for (Block block : blocks)
         {
-            ball.checkCollision(b);
-            if (b.isDestroyed())
+            if (collisionManager.checkCollision(ball, block))
+            {
+                ball.reverseYDirection();
+                block.setDestroyed(true);
+            }
+
+            if (block.isDestroyed())
             {
                 soundManager.play("collision");
                 puntaje++;
-                blocksToRemove.add(b);
+                blocksToRemove.add(block);
             }
         }
 
         blocks.removeAll(blocksToRemove);
+    }
 
-        ball.checkCollision(pad);
+    public void update()
+    {
+        // Manejar movimiento de paddle
+        pad.handleInput();
+
+        // Monitorear inicio del juego
+        handleStart();
+
+        // Verificar si se fue la bola x abajo
+        handleOutOfBounds(pad);
+
+        // Verificar game over
+        handleGameOver();
+
+        // Verificar si el nivel se terminó
+        handleLevelFinished();
+
+        // Verificar colisiones
+        handleBlockCollision();
+
+        collisionManager.handleBallPaddleCollision(ball, pad);
     }
 
     public void crearBloques(int filas)
@@ -109,10 +147,7 @@ public class GameWorld {
 
     public int getVidas() { return vidas; }
 
-    public void dispose()
-    {
-        soundManager.dispose();
-    }
+    public void dispose() { soundManager.dispose(); }
 
     // Getters para elementos del juego (paddle, ball, blocks, etc.)
 }
