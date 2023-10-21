@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Paddle extends GameObject implements Movable
 {
-    private static final int VELOCIDAD_PADDLE = 15;
+    private static final int VELOCIDAD_PADDLE = 4;
     public Paddle(int x, int y, int width, int height) { super(x, y, width, height, Color.BLUE); }
 
     public void draw(ShapeRenderer shape)
