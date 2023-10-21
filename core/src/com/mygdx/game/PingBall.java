@@ -57,6 +57,13 @@ public class PingBall extends GameObject implements Movable
 		this.x = x;
 		this.y = y;
 	}
+
+	public void setXSpeed(double xSpeed) { this.xSpeed = (int) xSpeed; }
+	public void setYSpeed(double ySpeed) { this.ySpeed = (int) ySpeed; }
+
+	public double getSpeed() { return Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed); }
+
+
 }
 
 

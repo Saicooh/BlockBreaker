@@ -39,7 +39,7 @@ public class GameWorld
     {
         if (vidas > 0) return;
 
-        soundManager.play("gameover");
+        soundManager.play("gameover", 0.3f);
         vidas = VIDAS_INICIALES;
         nivel = 1;
         puntaje = 0;
@@ -72,6 +72,7 @@ public class GameWorld
             nivel++;
             crearBloques(2 + nivel);
             ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 5, 7, true);
+            soundManager.play("finish", 0.3f);
         }
     }
 
@@ -89,7 +90,7 @@ public class GameWorld
 
             if (block.isDestroyed())
             {
-                soundManager.play("collision");
+                soundManager.play("collision", 1.0f);
                 puntaje++;
                 blocksToRemove.add(block);
             }
@@ -118,7 +119,7 @@ public class GameWorld
         // Verificar colisiones
         handleBlockCollision();
 
-        collisionManager.handleBallPaddleCollision(ball, pad);
+        if (collisionManager.handleBallPaddleCollision(ball, pad)) soundManager.play("paddleHit2", 0.3f);
     }
 
     public void crearBloques(int filas)

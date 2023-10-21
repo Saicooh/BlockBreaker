@@ -3,7 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
-public class CollisionManager {
+public class CollisionManager
+{
 
     private final Rectangle rect1 = new Rectangle();
     private final Rectangle rect2 = new Rectangle();
@@ -24,9 +25,14 @@ public class CollisionManager {
         }
     }
 
-    public void handleBallPaddleCollision(PingBall ball, Paddle paddle)
+    public boolean handleBallPaddleCollision(PingBall ball, Paddle paddle)
     {
-        if (checkCollision(ball, paddle)) ball.reverseYDirection();
+        if (checkCollision(ball, paddle))
+        {
+            ball.reverseYDirection();
+            return true;
+        }
+        return false;
     }
 
     private void setRectangleFromObject(Rectangle rect, GameObject obj)

@@ -15,8 +15,8 @@ public class GameRenderer
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
 
-    private static final int CAMERA_WIDTH = 800;
-    private static final int CAMERA_HEIGHT = 480;
+    private static final int CAMERA_WIDTH = 2075;
+    private static final int CAMERA_HEIGHT = 1080;
 
     public GameRenderer(GameWorld world)
     {
