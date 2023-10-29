@@ -33,7 +33,7 @@ public class GameWorld
         nivel = 1;
         blockManager = new BlockManager();
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
-        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 2, 2, true);
+        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 7, 7, true);
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
         vidas = VIDAS_INICIALES;
         puntaje = 0;
@@ -69,7 +69,7 @@ public class GameWorld
         if (ball.getY() < 0)
         {
             vidas--;
-            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 2, 2, true);
+            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, true);
         }
     }
 
@@ -79,7 +79,7 @@ public class GameWorld
         {
             nivel++;
             blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
-            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 2, 2, true);
+            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 7, 7, true);
             soundManager.play("finish", 0.3f);
         }
     }
