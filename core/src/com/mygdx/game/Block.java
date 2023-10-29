@@ -24,7 +24,7 @@ public class Block extends GameObject
 
     public void draw(ShapeRenderer shape)
     {
-        if (!destroyed)
+        if (!isDestroyed())
         {
             shape.setColor(color);  // Usamos el color almacenado en lugar de un color fijo
             shape.rect(getX(), getY(), getWidth(), getHeight());

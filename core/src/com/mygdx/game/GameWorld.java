@@ -4,17 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameWorld
 {
     private PingBall ball;
     private final Paddle pad;
-    private final ArrayList<Block> blocks = new ArrayList<>();
+
     private int vidas, puntaje, nivel;
 
     private final SoundManager soundManager;
 
     private final CollisionManager collisionManager;
+
+    private final BlockManager blockManager;
 
     private static final int VIDAS_INICIALES = 3;
     private static final int ANCHO_PADDLE = 140;
@@ -22,10 +25,14 @@ public class GameWorld
 
     private static final int TAMANO_BOLA = 12;
 
+    private static final int ANCHO_BLOQUE = 70;
+    private static final int ALTO_BLOQUE = 26;
+
     public GameWorld()
     {
         nivel = 1;
-        crearBloques(2 + nivel);
+        blockManager = new BlockManager();
+        blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
         ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 2, 2, true);
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
         vidas = VIDAS_INICIALES;
@@ -33,6 +40,7 @@ public class GameWorld
 
         soundManager = new SoundManager();
         collisionManager = new CollisionManager();
+
     }
 
     public void handleGameOver()
@@ -43,7 +51,7 @@ public class GameWorld
         vidas = VIDAS_INICIALES;
         nivel = 1;
         puntaje = 0;
-        crearBloques(2 + nivel);
+        blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
     }
 
     public void handleStart()
@@ -67,36 +75,13 @@ public class GameWorld
 
     public void handleLevelFinished()
     {
-        if (blocks.isEmpty())
+        if (blockManager.getBlocks().isEmpty())
         {
             nivel++;
-            crearBloques(2 + nivel);
+            blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
             ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 2, 2, true);
             soundManager.play("finish", 0.3f);
         }
-    }
-
-    void handleBlockCollision()
-    {
-        ArrayList<Block> blocksToRemove = new ArrayList<>();
-
-        for (Block block : blocks)
-        {
-            if (collisionManager.checkCollision(ball, block))
-            {
-                ball.reverseYDirection();
-                block.setDestroyed(true);
-            }
-
-            if (block.isDestroyed())
-            {
-                soundManager.play("collision", 1.0f);
-                puntaje++;
-                blocksToRemove.add(block);
-            }
-        }
-
-        blocks.removeAll(blocksToRemove);
     }
 
     public void update()
@@ -117,32 +102,20 @@ public class GameWorld
         handleLevelFinished();
 
         // Verificar colisiones
-        handleBlockCollision();
+        if (collisionManager.handleBallBlockCollision(ball, blockManager.getBlocks()))
+        {
+            soundManager.play("collision", 0.3f);
+            puntaje++;
+        }
 
         if (collisionManager.handleBallPaddleCollision(ball, pad)) soundManager.play("paddleHit2", 0.3f);
-    }
-
-    public void crearBloques(int filas)
-    {
-        blocks.clear();
-
-        int blockWidth = 70;
-        int blockHeight = 26;
-        int y = Gdx.graphics.getHeight();
-
-        for (int cont = 0; cont < filas; cont++)
-        {
-            y -= blockHeight + 10;
-            for (int x = 5; x < Gdx.graphics.getWidth(); x += blockWidth + 10)
-                blocks.add(new Block(x, y, blockWidth, blockHeight));
-        }
     }
 
     public Paddle getPad() { return pad; }
 
     public PingBall getBall() { return ball; }
 
-    public ArrayList<Block> getBlocks() { return blocks; }
+    public ArrayList<Block> getBlocks() { return (ArrayList<Block>) blockManager.getBlocks(); }
 
     public int getPuntaje() { return puntaje; }
 

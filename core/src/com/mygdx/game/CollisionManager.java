@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
+import java.util.List;
+
 public class CollisionManager
 {
 
@@ -16,13 +18,19 @@ public class CollisionManager
         return rect1.overlaps(rect2);
     }
 
-    public void handleBallBlockCollision(PingBall ball, Block block)
+    public boolean handleBallBlockCollision(PingBall ball, List<Block> blocks)
     {
-        if (checkCollision(ball, block))
+        for (Block block : blocks)
         {
-            ball.reverseYDirection();
-            block.setDestroyed(true);
+            if (checkCollision(ball, block))
+            {
+                ball.reverseYDirection();
+                block.setDestroyed(true);
+                blocks.remove(block);
+                return true;
+            }
         }
+        return false;
     }
 
     public boolean handleBallPaddleCollision(PingBall ball, Paddle paddle)

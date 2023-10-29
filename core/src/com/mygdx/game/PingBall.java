@@ -24,8 +24,6 @@ public class PingBall extends GameObject implements Movable
 
 	public void setEstaQuieto(boolean bb) { estaQuieto = bb; }
 
-	public int getSize() { return width; } // width y height son iguales en PingBall
-
 	@Override
 	public void draw(ShapeRenderer shape)
 	{
