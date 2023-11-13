@@ -44,6 +44,10 @@ public class GameRenderer
         for (Block b : world.getBlocks())
             b.draw(shapeRenderer);
 
+        // Dibuja los powerups
+        for (PowerUp pu : world.getPowerUpManager().getPowerUpsCayendo())
+            pu.draw(shapeRenderer);
+
         shapeRenderer.end();
         dibujaTextos();
     }

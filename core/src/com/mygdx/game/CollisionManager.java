@@ -18,31 +18,6 @@ public class CollisionManager
         return rect1.overlaps(rect2);
     }
 
-    public boolean handleBallBlockCollision(PingBall ball, List<Block> blocks)
-    {
-        for (Block block : blocks)
-        {
-            if (checkCollision(ball, block))
-            {
-                ball.reverseYDirection();
-                block.setDestroyed(true);
-                blocks.remove(block);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean handleBallPaddleCollision(PingBall ball, Paddle paddle)
-    {
-        if (checkCollision(ball, paddle))
-        {
-            ball.reverseYDirection();
-            return true;
-        }
-        return false;
-    }
-
     private void setRectangleFromObject(Rectangle rect, GameObject obj)
     {
         if (obj instanceof PingBall)

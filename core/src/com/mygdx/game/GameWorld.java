@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class GameWorld
 {
@@ -18,6 +19,8 @@ public class GameWorld
     private final CollisionManager collisionManager;
 
     private final BlockManager blockManager;
+
+    private final PowerUpManager powerUpManager;
 
     private static final int VIDAS_INICIALES = 3;
     private static final int ANCHO_PADDLE = 140;
@@ -40,7 +43,7 @@ public class GameWorld
 
         soundManager = new SoundManager();
         collisionManager = new CollisionManager();
-
+        powerUpManager = new PowerUpManager(this, collisionManager);
     }
 
     public void handleGameOver()
@@ -84,6 +87,41 @@ public class GameWorld
         }
     }
 
+    private void verifyBlocksCollision()
+    {
+        Iterator<Block> iterator = blockManager.getBlocks().iterator();
+
+        while (iterator.hasNext())
+        {
+            Block block = iterator.next();
+
+            if (collisionManager.checkCollision(ball, block))
+            {
+                if (Math.random() < 0.9) generatePowerUp(block.getX(), block.getY());
+                ball.reverseYDirection();
+                block.setDestroyed(true);
+                iterator.remove(); // Eliminar el bloque usando el iterador
+
+                soundManager.play("collision", 0.3f);
+                puntaje++;
+            }
+        }
+    }
+
+    private void generatePowerUp(int x, int y)
+    {
+        powerUpManager.spawnPowerUp(x, y);
+    }
+
+    private void handleBallPaddleCollision()
+    {
+        if (collisionManager.checkCollision(ball, pad))
+        {
+            ball.reverseYDirection();
+            soundManager.play("paddleHit2", 0.3f);
+        }
+    }
+
     public void update()
     {
         // Manejar movimiento de paddle
@@ -95,20 +133,18 @@ public class GameWorld
         // Verificar si se fue la bola x abajo
         handleOutOfBounds(pad);
 
+        handleBallPaddleCollision();
+
         // Verificar game over
         handleGameOver();
 
         // Verificar si el nivel se terminó
         handleLevelFinished();
 
-        // Verificar colisiones
-        if (collisionManager.handleBallBlockCollision(ball, blockManager.getBlocks()))
-        {
-            soundManager.play("collision", 0.3f);
-            puntaje++;
-        }
+        powerUpManager.update();
 
-        if (collisionManager.handleBallPaddleCollision(ball, pad)) soundManager.play("paddleHit2", 0.3f);
+        verifyBlocksCollision();
+
     }
 
     public Paddle getPad() { return pad; }
@@ -120,6 +156,13 @@ public class GameWorld
     public int getPuntaje() { return puntaje; }
 
     public int getVidas() { return vidas; }
+
+    public PowerUpManager getPowerUpManager()
+    {
+        return powerUpManager;
+    }
+
+    public void setVidas(int vidas) { this.vidas = vidas; }
 
     public void dispose() { soundManager.dispose(); }
 
