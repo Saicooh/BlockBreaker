@@ -41,7 +41,7 @@ public class GameRenderer
         world.getBall().draw(shapeRenderer);
 
         // Dibuja los bloques
-        for (Block b : world.getBlocks())
+        for (Block b : world.getBlockManager().getBlocks())
             b.draw(shapeRenderer);
 
         // Dibuja los powerups
@@ -60,7 +60,9 @@ public class GameRenderer
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         //dibujar textos
-        font.draw(batch, "Puntos: " + world.getPuntaje(), 10, 25);
+        font.draw(batch, "Puntos: " + world.getPuntaje(), 10, 55);
+        font.draw(batch, "Multiplicador: " + world.getMultiplicadorPuntaje() + "x", 10, 25);
+        font.draw(batch, "Nivel: " + world.getNivel(), Gdx.graphics.getWidth(), 55);
         font.draw(batch, "Vidas : " + world.getVidas(), Gdx.graphics.getWidth() - 20, 25);
         batch.end();
     }

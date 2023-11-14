@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public abstract class PowerUp extends GameObject implements Movable
 {
@@ -8,23 +9,30 @@ public abstract class PowerUp extends GameObject implements Movable
     protected GameWorld game;
     protected boolean isBuff;
 
-    public PowerUp(GameWorld game, int x, int y, int width, int height, Color color)
+    public PowerUp(GameWorld game, int x, int y, int width, int height, Color color, boolean isBuff)
     {
         super(x, y, width, height, color); // Llama al constructor de GameObject.
         this.game = game;
-        this.speedY = 5; // Velocidad de caída.
-        this.isBuff = true;
+        this.speedY = 3; // Velocidad de caída.
+
+        this.isBuff = isBuff;
     }
 
     @Override
     public void move(int deltaX, int deltaY)
     {
-        // Actualizar la posición del modificador.
         this.x += deltaX;
         this.y += deltaY;
-        // Asumiendo que deseas mantener actualizados los campos x e y de GameObject.
+
         setX(this.x);
         setY(this.y);
+    }
+
+    @Override
+    public void draw(ShapeRenderer shape)
+    {
+        shape.setColor(color);
+        shape.circle(x, y, width);
     }
 
     public void mover()

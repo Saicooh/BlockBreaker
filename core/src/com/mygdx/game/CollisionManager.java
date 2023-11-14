@@ -25,14 +25,5 @@ public class CollisionManager
 
         else rect.set(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
     }
-
-    public void handleBallScreenCollision(PingBall ball)
-    {
-        if (ball.getX() - ball.getWidth() / 2 < 0 || ball.getX() + ball.getWidth() / 2 > Gdx.graphics.getWidth())
-            ball.reverseXDirection();
-
-        if (ball.getY() + ball.getWidth() / 2 > Gdx.graphics.getHeight())
-            ball.reverseYDirection();
-    }
 }
 

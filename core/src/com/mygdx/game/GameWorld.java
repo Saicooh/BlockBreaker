@@ -12,7 +12,7 @@ public class GameWorld
     private PingBall ball;
     private final Paddle pad;
 
-    private int vidas, puntaje, nivel;
+    private int vidas = VIDAS_INICIALES, puntaje = 0, nivel = 1, multiplicadorPuntaje = 1;
 
     private final SoundManager soundManager;
 
@@ -33,17 +33,14 @@ public class GameWorld
 
     public GameWorld()
     {
-        nivel = 1;
         blockManager = new BlockManager();
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
         ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 7, 7, true);
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
-        vidas = VIDAS_INICIALES;
-        puntaje = 0;
 
         soundManager = new SoundManager();
         collisionManager = new CollisionManager();
-        powerUpManager = new PowerUpManager(this, collisionManager);
+        powerUpManager = new PowerUpManager(this, collisionManager, soundManager);
     }
 
     public void handleGameOver()
@@ -54,6 +51,7 @@ public class GameWorld
         vidas = VIDAS_INICIALES;
         nivel = 1;
         puntaje = 0;
+        multiplicadorPuntaje = 1;
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
     }
 
@@ -73,18 +71,28 @@ public class GameWorld
         {
             vidas--;
             ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, true);
+            powerUpManager.limpiarPoderesCayendo();
         }
     }
 
     public void handleLevelFinished()
     {
-        if (blockManager.getBlocks().isEmpty())
+        if (blockManager.verificarListaVacia())
         {
             nivel++;
             blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
             ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 7, 7, true);
             soundManager.play("finish", 0.3f);
+            multiplicadorPuntaje = 1;
+            powerUpManager.limpiarPoderesCayendo();
         }
+    }
+
+    public void handleBallScreenCollision(PingBall ball)
+    {
+        if (ball.getX() - ball.getWidth() / 2 < 0 || ball.getX() + ball.getWidth() / 2 > Gdx.graphics.getWidth()) ball.reverseXDirection();
+
+        if (ball.getY() + ball.getWidth() / 2 > Gdx.graphics.getHeight()) ball.reverseYDirection();
     }
 
     private void verifyBlocksCollision()
@@ -97,13 +105,14 @@ public class GameWorld
 
             if (collisionManager.checkCollision(ball, block))
             {
-                if (Math.random() < 0.9) generatePowerUp(block.getX(), block.getY());
+                generatePowerUp(block.getX(), block.getY());
                 ball.reverseYDirection();
                 block.setDestroyed(true);
                 iterator.remove(); // Eliminar el bloque usando el iterador
 
                 soundManager.play("collision", 0.3f);
-                puntaje++;
+
+                puntaje += Math.max(multiplicadorPuntaje, 1);
             }
         }
     }
@@ -135,6 +144,8 @@ public class GameWorld
 
         handleBallPaddleCollision();
 
+        handleBallScreenCollision(ball);
+
         // Verificar game over
         handleGameOver();
 
@@ -151,11 +162,13 @@ public class GameWorld
 
     public PingBall getBall() { return ball; }
 
-    public ArrayList<Block> getBlocks() { return (ArrayList<Block>) blockManager.getBlocks(); }
+    public BlockManager getBlockManager() { return blockManager; }
 
     public int getPuntaje() { return puntaje; }
 
     public int getVidas() { return vidas; }
+
+    public int getMultiplicadorPuntaje() { return multiplicadorPuntaje; }
 
     public PowerUpManager getPowerUpManager()
     {
@@ -164,7 +177,11 @@ public class GameWorld
 
     public void setVidas(int vidas) { this.vidas = vidas; }
 
+    public void setMultiplicadorPuntaje(int multiplicadorPuntaje) { this.multiplicadorPuntaje = multiplicadorPuntaje; }
+
     public void dispose() { soundManager.dispose(); }
+
+    public String getNivel() { return String.valueOf(nivel);}
 
     // Getters para elementos del juego (paddle, ball, blocks, etc.)
 }

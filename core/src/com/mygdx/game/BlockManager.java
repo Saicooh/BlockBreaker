@@ -25,7 +25,10 @@ public class BlockManager
         }
     }
 
-
+    public boolean verificarListaVacia()
+    {
+        return blocks.isEmpty();
+    }
 
     public List<Block> getBlocks() { return blocks; }
 

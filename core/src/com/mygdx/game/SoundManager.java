@@ -11,6 +11,7 @@ public class SoundManager
     private final Sound paddleHitSound;
     private final Sound paddleHitSound2;
     private final Sound finishSound;
+    private final Sound powerUpSound;
 
     public SoundManager()
     {
@@ -19,11 +20,13 @@ public class SoundManager
         paddleHitSound = Gdx.audio.newSound(Gdx.files.internal("sfx/paddlehit.wav"));
         paddleHitSound2 = Gdx.audio.newSound(Gdx.files.internal("sfx/paddlehit2.wav"));
         finishSound = Gdx.audio.newSound(Gdx.files.internal("sfx/finish.wav"));
+        powerUpSound = Gdx.audio.newSound(Gdx.files.internal("sfx/powerup.mp3"));
     }
 
     public void play(String sound, float volume)
     {
         switch (sound) {
+            case "powerup": powerUpSound.play(volume); break;
             case "collision": collisionSound.play(volume); break;
             case "gameover": gameOverSound.play(volume); break;
             case "paddleHit": paddleHitSound.play(volume); break;

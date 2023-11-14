@@ -39,7 +39,7 @@ public class PingBall extends GameObject implements Movable
 		x += xSpeed;
 		y += ySpeed;
 
-		collisionManager.handleBallScreenCollision(this);
+		//collisionManager.handleBallScreenCollision(this);
 	}
 
 	public void reverseYDirection() { ySpeed = -ySpeed; }
