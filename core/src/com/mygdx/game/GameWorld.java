@@ -1,13 +1,11 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 
 import java.util.Iterator;
 
 public class GameWorld
 {
-    private PingBall ball;
     private final Paddle pad;
 
     private int vidas = VIDAS_INICIALES, puntaje = 0, nivel = 1, multiplicadorPuntaje = 1;
@@ -16,6 +14,7 @@ public class GameWorld
     private final CollisionManager collisionManager;
     private final BlockManager blockManager;
     private final PowerUpManager powerUpManager;
+    private final PingBallManager pingBallManager;
 
     private static final int VIDAS_INICIALES = 3;
     private static final int ANCHO_PADDLE = 140;
@@ -28,12 +27,15 @@ public class GameWorld
     {
         blockManager = new BlockManager();
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
-        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 7, 7, true, false);
+
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
 
         soundManager = new SoundManager();
         collisionManager = new CollisionManager();
         powerUpManager = new PowerUpManager(this, collisionManager, soundManager);
+        pingBallManager = new PingBallManager(this, collisionManager, soundManager);
+
+        pingBallManager.addBall(createBall(true, false));
     }
 
     private void resetGame()
@@ -53,10 +55,12 @@ public class GameWorld
         multiplicadorPuntaje = 1;
 
         pad.setWidth(ANCHO_PADDLE);
-        ball = createBall();
 
         powerUpManager.limpiarPoderesCayendo();
         powerUpManager.limpiarPoderesActivos();
+        pingBallManager.cleanBallList();
+
+        pingBallManager.addBall(createBall(true, false));
     }
 
     private void increaseLevel()
@@ -66,27 +70,14 @@ public class GameWorld
         soundManager.play("finish", 0.3f);
     }
 
-    public void handleGameOver()
-    {
-        if (vidas == 0) resetGame();
-    }
+    public void handleGameOver() { if (vidas == 0) resetGame(); }
 
-    public void handleStart()
+    public void handleOutOfBounds()
     {
-        if (ball.estaQuieto())
-        {
-            ball.setXY(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11);
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) ball.setEstaQuieto(false);
-        }
-        else ball.move(ball.getXSpeed(), ball.getYSpeed());
-    }
-
-    public void handleOutOfBounds(Paddle pad)
-    {
-        if (ball.getY() < 0)
+        if (pingBallManager.verifyAllBallsOutOfBounds())
         {
             vidas--;
-            ball = createBall();
+            pingBallManager.addBall(createBall(true, false));
             powerUpManager.limpiarPoderesCayendo();
         }
     }
@@ -100,53 +91,46 @@ public class GameWorld
         }
     }
 
-    public void handleBallScreenCollision(PingBall ball)
-    {
-        if (ball.getX() - ball.getWidth() / 2 < 0 || ball.getX() + ball.getWidth() / 2 > Gdx.graphics.getWidth()) ball.reverseXDirection();
-
-        if (ball.getY() + ball.getWidth() / 2 > Gdx.graphics.getHeight()) ball.reverseYDirection();
-    }
-
     private void verifyBlocksCollision()
     {
         Iterator<Block> iterator = blockManager.getBlocks().iterator();
 
         while (iterator.hasNext())
         {
+            Iterator<PingBall> pingBallIterator = pingBallManager.getBallList().iterator();
+
             Block block = iterator.next();
 
-            if (collisionManager.checkCollision(ball, block))
+            while (pingBallIterator.hasNext())
             {
-                generatePowerUp(block.getX(), block.getY());
-                ball.reverseYDirection();
-                block.setDestroyed(true);
-                iterator.remove(); // Eliminar el bloque usando el iterador
+                PingBall ball = pingBallIterator.next();
 
-                soundManager.play("collision", 0.3f);
+                if (collisionManager.checkCollision(ball, block))
+                {
+                    generatePowerUp(block.getX(), block.getY());
 
-                puntaje += Math.max(multiplicadorPuntaje, 1);
+                    if (!ball.isFire()) ball.reverseYDirection();
+
+                    block.setDestroyed(true);
+                    iterator.remove();
+
+                    soundManager.play("collision", 0.3f);
+
+                    puntaje += Math.max(multiplicadorPuntaje, 1);
+                }
             }
         }
     }
 
-    private PingBall createBall()
+    public PingBall createBall(boolean iniciaQuieto, boolean fire)
     {
-        return new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, true, false);
+        return new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, iniciaQuieto, fire);
     }
 
-    private void generatePowerUp(int x, int y)
-    {
-        powerUpManager.spawnPowerUp(x, y);
-    }
+    public void addBall(PingBall ball) { pingBallManager.addBall(ball); }
 
-    private void handleBallPaddleCollision()
-    {
-        if (collisionManager.checkCollision(ball, pad))
-        {
-            ball.reverseYDirection();
-            soundManager.play("paddleHit2", 0.3f);
-        }
-    }
+    private void generatePowerUp(int x, int y) { powerUpManager.spawnPowerUp(x, y); }
+
 
     public void update()
     {
@@ -154,14 +138,14 @@ public class GameWorld
         pad.handleInput();
 
         // Monitorear inicio del juego
-        handleStart();
+        pingBallManager.handleStart();
 
         // Verificar si se fue la bola x abajo
-        handleOutOfBounds(pad);
+        handleOutOfBounds();
 
-        handleBallPaddleCollision();
+        pingBallManager.handleBallPaddleCollision();
 
-        handleBallScreenCollision(ball);
+        pingBallManager.handleBallScreen();
 
         // Verificar game over
         handleGameOver();
@@ -172,11 +156,9 @@ public class GameWorld
         powerUpManager.update();
 
         verifyBlocksCollision();
-
     }
 
     public Paddle getPad() { return pad; }
-    public PingBall getBall() { return ball; }
 
     public int getPuntaje() { return puntaje; }
     public int getVidas() { return vidas; }
@@ -201,5 +183,7 @@ public class GameWorld
     }
 
     public void dispose() { soundManager.dispose(); }
+
+    public PingBallManager getPingBallManager() { return pingBallManager; }
 }
 

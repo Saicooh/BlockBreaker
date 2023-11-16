@@ -37,8 +37,9 @@ public class GameRenderer
         // Dibuja el Paddle
         world.getPad().draw(shapeRenderer);
 
-        // Dibuja la bola
-        world.getBall().draw(shapeRenderer);
+        // Dibuja la lista de pelotas
+        for (PingBall ball : world.getPingBallManager().getBallList())
+            ball.draw(shapeRenderer);
 
         // Dibuja los bloques
         for (Block b : world.getBlockManager().getBlocks())

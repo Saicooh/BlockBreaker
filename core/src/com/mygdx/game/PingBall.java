@@ -9,7 +9,7 @@ public class PingBall extends GameObject implements Movable
 	private int ySpeed;
 
 	private boolean estaQuieto;
-	private boolean fire;
+	private final boolean fire;
 
 	public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto, boolean fire)
 	{
@@ -29,7 +29,9 @@ public class PingBall extends GameObject implements Movable
 	@Override
 	public void draw(ShapeRenderer shape)
 	{
-		shape.setColor(color);
+		if (fire) shape.setColor(Color.RED);
+		else shape.setColor(color);
+
 		shape.circle(x, y, (float) width); // width / 2 es el radio
 	}
 
@@ -46,6 +48,8 @@ public class PingBall extends GameObject implements Movable
 
 	public void reverseXDirection() { xSpeed = -xSpeed; }
 
+	public boolean isFire() { return fire; }
+
 	public int getXSpeed() { return xSpeed; }
 
 	public int getYSpeed() { return ySpeed; }
@@ -56,12 +60,16 @@ public class PingBall extends GameObject implements Movable
 		this.y = y;
 	}
 
+	/*
+
 	public void setXSpeed(double xSpeed) { this.xSpeed = (int) xSpeed; }
 	public void setYSpeed(double ySpeed) { this.ySpeed = (int) ySpeed; }
 
 	public double getSpeed() { return Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed); }
 
+	pora futura implementacion de velocidad variable con trigonometría y ángulos de choque
 
+	*/
 }
 
 

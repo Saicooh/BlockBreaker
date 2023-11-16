@@ -12,6 +12,6 @@ public class DoublePingBall extends PowerUp
     @Override
     public void apply()
     {
-        //game.
+        game.addBall(game.createBall(false, false));
     }
 }

@@ -12,6 +12,6 @@ public class FirePingBall extends PowerUp
     @Override
     public void apply()
     {
-        //game.
+        game.addBall(game.createBall(false, true));
     }
 }
