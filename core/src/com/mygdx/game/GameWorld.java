@@ -3,10 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Timer;
 
 public class GameWorld
 {
@@ -31,7 +28,7 @@ public class GameWorld
     {
         blockManager = new BlockManager();
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
-        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 7, 7, true);
+        ball = new PingBall(Gdx.graphics.getWidth() / 2 - 10, 41, TAMANO_BOLA, 7, 7, true, false);
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
 
         soundManager = new SoundManager();
@@ -39,16 +36,39 @@ public class GameWorld
         powerUpManager = new PowerUpManager(this, collisionManager, soundManager);
     }
 
-    public void handleGameOver()
+    private void resetGame()
     {
-        if (vidas > 0) return;
-
         soundManager.play("gameover", 0.3f);
+        resetGameStatus();
+        blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
+    }
+
+    private void resetGameStatus()
+    {
+        cancelAllTimers();
+
         vidas = VIDAS_INICIALES;
         nivel = 1;
         puntaje = 0;
         multiplicadorPuntaje = 1;
-        blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
+
+        pad.setWidth(ANCHO_PADDLE);
+        ball = createBall();
+
+        powerUpManager.limpiarPoderesCayendo();
+        powerUpManager.limpiarPoderesActivos();
+    }
+
+    private void increaseLevel()
+    {
+        nivel++;
+        resetGameStatus();
+        soundManager.play("finish", 0.3f);
+    }
+
+    public void handleGameOver()
+    {
+        if (vidas == 0) resetGame();
     }
 
     public void handleStart()
@@ -66,7 +86,7 @@ public class GameWorld
         if (ball.getY() < 0)
         {
             vidas--;
-            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, true);
+            ball = createBall();
             powerUpManager.limpiarPoderesCayendo();
         }
     }
@@ -75,12 +95,8 @@ public class GameWorld
     {
         if (blockManager.verificarListaVacia())
         {
-            nivel++;
+            increaseLevel();
             blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
-            ball = new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, 10, 7, 7, true);
-            soundManager.play("finish", 0.3f);
-            multiplicadorPuntaje = 1;
-            powerUpManager.limpiarPoderesCayendo();
         }
     }
 
@@ -111,6 +127,11 @@ public class GameWorld
                 puntaje += Math.max(multiplicadorPuntaje, 1);
             }
         }
+    }
+
+    private PingBall createBall()
+    {
+        return new PingBall(pad.getX() + pad.getWidth() / 2 - 5, pad.getY() + pad.getHeight() + 11, TAMANO_BOLA, 7, 7, true, false);
     }
 
     private void generatePowerUp(int x, int y)
@@ -155,22 +176,21 @@ public class GameWorld
     }
 
     public Paddle getPad() { return pad; }
-
     public PingBall getBall() { return ball; }
 
+    public int getPuntaje() { return puntaje; }
+    public int getVidas() { return vidas; }
+    public int getMultiplicadorPuntaje() { return multiplicadorPuntaje; }
+    public int getPaddleWidth() { return pad.getWidth(); }
+
+    public PowerUpManager getPowerUpManager() { return powerUpManager; }
     public BlockManager getBlockManager() { return blockManager; }
 
-    public int getPuntaje() { return puntaje; }
+    public void cancelAllTimers() { powerUpManager.cancelAllTimers(); }
 
-    public int getVidas() { return vidas; }
+    public String getNivel() { return String.valueOf(nivel);}
 
-    public int getMultiplicadorPuntaje() { return multiplicadorPuntaje; }
-
-    public PowerUpManager getPowerUpManager()
-    {
-        return powerUpManager;
-    }
-
+    public void setPaddleWidth(int width) { pad.setWidth(width); }
     public void setVidas(int vidas) { this.vidas = vidas; }
 
     public void setMultiplicadorPuntaje(int multiplicadorPuntaje)
@@ -181,9 +201,5 @@ public class GameWorld
     }
 
     public void dispose() { soundManager.dispose(); }
-
-    public String getNivel() { return String.valueOf(nivel);}
-
-    // Getters para elementos del juego (paddle, ball, blocks, etc.)
 }
 

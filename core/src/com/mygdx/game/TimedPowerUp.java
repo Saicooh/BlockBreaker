@@ -8,6 +8,7 @@ import java.util.TimerTask;
 public abstract class TimedPowerUp extends PowerUp
 {
     protected Timer timer;
+
     protected long duration;
 
     public TimedPowerUp(GameWorld game, int x, int y, int width, int height, Color color, long duration, boolean isBuff)
@@ -18,14 +19,22 @@ public abstract class TimedPowerUp extends PowerUp
 
     protected void startTimer()
     {
-        if (timer != null) timer.cancel(); // Cancelar cualquier temporizador existente
+        cancelTimer(); // Cancelar cualquier temporizador existente
 
         timer = new Timer();
-        timer.schedule(new TimerTask()
+
+        TimerTask task = new TimerTask()
         {
             @Override
-            public void run() { deactivate(); };
-        }, duration);
+            public void run() { deactivate(); }
+        };
+
+        timer.schedule(task, duration);
+    }
+
+    public void cancelTimer()
+    {
+        if (timer != null) timer.cancel();
     }
 
     public abstract void deactivate();

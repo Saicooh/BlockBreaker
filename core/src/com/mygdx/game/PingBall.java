@@ -7,13 +7,18 @@ public class PingBall extends GameObject implements Movable
 {
 	private int xSpeed;
 	private int ySpeed;
-	private boolean estaQuieto;
 
-	public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto)
+	private boolean estaQuieto;
+	private boolean fire;
+
+	public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto, boolean fire)
 	{
 		super(x, y, size, size, Color.WHITE);
+
 		this.xSpeed = xSpeed;
 		this.ySpeed = ySpeed;
+
+		this.fire = fire;
 		estaQuieto = iniciaQuieto;
 	}
 

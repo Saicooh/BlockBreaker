@@ -10,6 +10,7 @@ import java.util.Random;
 public class PowerUpManager
 {
     private final List<PowerUp> powerUpsCayendo;
+    private final List<PowerUp> powerUpsActivos;
     private final GameWorld gameWorld;
     private final CollisionManager collisionManager;
     private final SoundManager soundManager;
@@ -17,6 +18,7 @@ public class PowerUpManager
     public PowerUpManager(GameWorld gameWorld, CollisionManager collisionManager, SoundManager soundManager)
     {
         powerUpsCayendo = new ArrayList<>();
+        powerUpsActivos = new ArrayList<>();
         this.gameWorld = gameWorld;
         this.collisionManager = collisionManager;
         this.soundManager = soundManager;
@@ -28,7 +30,7 @@ public class PowerUpManager
 
         Random random = new Random();
 
-        int rand = random.nextInt(2) + 1;
+        int rand = random.nextInt(5) + 1;
 
         PowerUp newPowerUp = null;
 
@@ -36,11 +38,10 @@ public class PowerUpManager
         {
             case 1: newPowerUp = new ExtraLife(this.gameWorld, x, y, 20, 20, Color.GREEN); break;
             case 2: newPowerUp = new DoubleScore(this.gameWorld, x, y, 20, 20, Color.YELLOW); break;
-            //case 3: newPowerUp = new ExtraLife(this.gameWorld, x, y, 20, 20, Color.GREEN); System.out.println("3"); break;
-            //case 4: newPowerUp = new ExtraLife(this.gameWorld, x, y, 20, 20, Color.GREEN); System.out.println("4"); break;
-            //case 5: newPowerUp = new ExtraLife(this.gameWorld, x, y, 20, 20, Color.GREEN); System.out.println("5"); break;
+            case 3: newPowerUp = new PaddleExtender(this.gameWorld, x, y, 20, 20, Color.BLUE); break;
+            case 4: newPowerUp = new DoublePingBall(this.gameWorld, x, y, 20, 20, Color.WHITE); break;
+            case 5: newPowerUp = new FirePingBall(this.gameWorld, x, y, 20, 20, Color.ORANGE); break;
         }
-
         powerUpsCayendo.add(newPowerUp);
     }
 
@@ -54,6 +55,7 @@ public class PowerUpManager
 
             if (collisionManager.checkCollision(gameWorld.getPad(), powerUp))
             {
+                powerUpsActivos.add(powerUp);
                 soundManager.play("powerup", 0.3f);
                 powerUp.apply();
                 iterator.remove();
@@ -66,6 +68,17 @@ public class PowerUpManager
     {
         // Limpia la lista de power-ups cayendo
         powerUpsCayendo.clear();
+    }
+
+    public void limpiarPoderesActivos()
+    {
+        powerUpsActivos.clear(); // Limpia la lista de power-ups activos
+    }
+
+    public void cancelAllTimers()
+    {
+        for (PowerUp powerUp : powerUpsActivos)
+            if (powerUp instanceof TimedPowerUp) ((TimedPowerUp) powerUp).cancelTimer();
     }
 
     public List<PowerUp> getPowerUpsCayendo() { return powerUpsCayendo; }
