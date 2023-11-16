@@ -63,7 +63,7 @@ public class GameRenderer
         font.draw(batch, "Puntos: " + world.getPuntaje(), 10, 55);
         font.draw(batch, "Multiplicador: " + world.getMultiplicadorPuntaje() + "x", 10, 25);
         font.draw(batch, "Nivel: " + world.getNivel(), Gdx.graphics.getWidth(), 55);
-        font.draw(batch, "Vidas : " + world.getVidas(), Gdx.graphics.getWidth() - 20, 25);
+        font.draw(batch, "Vidas: " + world.getVidas(), Gdx.graphics.getWidth() - 20, 25);
         batch.end();
     }
 

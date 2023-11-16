@@ -41,17 +41,17 @@ public class PowerUpManager
             //case 5: newPowerUp = new ExtraLife(this.gameWorld, x, y, 20, 20, Color.GREEN); System.out.println("5"); break;
         }
 
-        if (newPowerUp != null) powerUpsCayendo.add(newPowerUp);
+        powerUpsCayendo.add(newPowerUp);
     }
 
     public void update()
     {
         Iterator<PowerUp> iterator = powerUpsCayendo.iterator();
-
         while (iterator.hasNext())
         {
             PowerUp powerUp = iterator.next();
             powerUp.mover();
+
             if (collisionManager.checkCollision(gameWorld.getPad(), powerUp))
             {
                 soundManager.play("powerup", 0.3f);

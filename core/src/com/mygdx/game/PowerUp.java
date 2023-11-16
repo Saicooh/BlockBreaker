@@ -35,10 +35,7 @@ public abstract class PowerUp extends GameObject implements Movable
         shape.circle(x, y, width);
     }
 
-    public void mover()
-    {
-        move(0, -speedY); // Mover hacia abajo a la velocidad speedY.
-    }
+    public void mover() { move(0, -speedY); } // Mover hacia abajo a la velocidad speedY.
 
     // Método abstracto para aplicar el efecto del modificador.
     public abstract void apply();

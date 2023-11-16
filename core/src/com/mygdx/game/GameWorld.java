@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
 
 public class GameWorld
 {
@@ -15,19 +16,14 @@ public class GameWorld
     private int vidas = VIDAS_INICIALES, puntaje = 0, nivel = 1, multiplicadorPuntaje = 1;
 
     private final SoundManager soundManager;
-
     private final CollisionManager collisionManager;
-
     private final BlockManager blockManager;
-
     private final PowerUpManager powerUpManager;
 
     private static final int VIDAS_INICIALES = 3;
     private static final int ANCHO_PADDLE = 140;
     private static final int ALTO_PADDLE = 15;
-
     private static final int TAMANO_BOLA = 12;
-
     private static final int ANCHO_BLOQUE = 70;
     private static final int ALTO_BLOQUE = 26;
 
@@ -177,7 +173,12 @@ public class GameWorld
 
     public void setVidas(int vidas) { this.vidas = vidas; }
 
-    public void setMultiplicadorPuntaje(int multiplicadorPuntaje) { this.multiplicadorPuntaje = multiplicadorPuntaje; }
+    public void setMultiplicadorPuntaje(int multiplicadorPuntaje)
+    {
+        if (multiplicadorPuntaje < 1) return;
+
+        this.multiplicadorPuntaje = multiplicadorPuntaje;
+    }
 
     public void dispose() { soundManager.dispose(); }
 

@@ -9,15 +9,12 @@ public class PingBall extends GameObject implements Movable
 	private int ySpeed;
 	private boolean estaQuieto;
 
-	private final CollisionManager collisionManager;
-
 	public PingBall(int x, int y, int size, int xSpeed, int ySpeed, boolean iniciaQuieto)
 	{
 		super(x, y, size, size, Color.WHITE);
 		this.xSpeed = xSpeed;
 		this.ySpeed = ySpeed;
 		estaQuieto = iniciaQuieto;
-		collisionManager = new CollisionManager();
 	}
 
 	public boolean estaQuieto() { return estaQuieto; }
@@ -38,8 +35,6 @@ public class PingBall extends GameObject implements Movable
 
 		x += xSpeed;
 		y += ySpeed;
-
-		//collisionManager.handleBallScreenCollision(this);
 	}
 
 	public void reverseYDirection() { ySpeed = -ySpeed; }
