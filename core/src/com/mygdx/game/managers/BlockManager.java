@@ -1,9 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Block;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class BlockManager
@@ -25,10 +25,7 @@ public class BlockManager
         }
     }
 
-    public boolean verificarListaVacia()
-    {
-        return blocks.isEmpty();
-    }
+    public boolean verificarListaVacia() { return blocks.isEmpty(); }
 
     public List<Block> getBlocks() { return blocks; }
 

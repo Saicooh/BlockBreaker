@@ -1,9 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.managers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.GameObject;
+import com.mygdx.game.PingBall;
 
-import java.util.List;
 
 public class CollisionManager
 {

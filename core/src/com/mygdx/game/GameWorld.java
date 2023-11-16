@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.managers.*;
 
 import java.util.Iterator;
 
@@ -41,7 +42,11 @@ public class GameWorld
     private void resetGame()
     {
         soundManager.play("gameover", 0.3f);
+
         resetGameStatus();
+
+        nivel = 1;
+
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
     }
 
@@ -50,7 +55,6 @@ public class GameWorld
         cancelAllTimers();
 
         vidas = VIDAS_INICIALES;
-        nivel = 1;
         puntaje = 0;
         multiplicadorPuntaje = 1;
 
@@ -65,8 +69,8 @@ public class GameWorld
 
     private void increaseLevel()
     {
-        nivel++;
         resetGameStatus();
+        nivel++;
         soundManager.play("finish", 0.3f);
     }
 
@@ -93,33 +97,37 @@ public class GameWorld
 
     private void verifyBlocksCollision()
     {
-        Iterator<Block> iterator = blockManager.getBlocks().iterator();
+        Iterator<Block> blockIterator = blockManager.getBlocks().iterator();
 
-        while (iterator.hasNext())
+        while (blockIterator.hasNext())
         {
-            Iterator<PingBall> pingBallIterator = pingBallManager.getBallList().iterator();
+            Block block = blockIterator.next();
+            if (checkAndHandleBallBlockCollision(block)) blockIterator.remove(); // Eliminar el bloque después de la colisión
+        }
+    }
 
-            Block block = iterator.next();
-
-            while (pingBallIterator.hasNext())
+    private boolean checkAndHandleBallBlockCollision(Block block)
+    {
+        for (PingBall ball : pingBallManager.getBallList())
+        {
+            if (collisionManager.checkCollision(ball, block))
             {
-                PingBall ball = pingBallIterator.next();
-
-                if (collisionManager.checkCollision(ball, block))
-                {
-                    generatePowerUp(block.getX(), block.getY());
-
-                    if (!ball.isFire()) ball.reverseYDirection();
-
-                    block.setDestroyed(true);
-                    iterator.remove();
-
-                    soundManager.play("collision", 0.3f);
-
-                    puntaje += Math.max(multiplicadorPuntaje, 1);
-                }
+                handleBallBlockCollision(ball, block);
+                return true; // Indica que hubo una colisión y el bloque debe eliminarse
             }
         }
+        return false; // No hubo colisión con este bloque
+    }
+
+    private void handleBallBlockCollision(PingBall ball, Block block)
+    {
+        generatePowerUp(block.getX(), block.getY());
+
+        if (!ball.isFire()) ball.reverseYDirection();
+
+        soundManager.play("collision", 0.3f);
+
+        puntaje += Math.max(multiplicadorPuntaje, 1);
     }
 
     public PingBall createBall(boolean iniciaQuieto, boolean fire)
@@ -134,27 +142,31 @@ public class GameWorld
 
     public void update()
     {
-        // Manejar movimiento de paddle
+        // Maneja movimiento de paddle
         pad.handleInput();
 
-        // Monitorear inicio del juego
+        // Monitorea inicio del juego
         pingBallManager.handleStart();
 
-        // Verificar si se fue la bola x abajo
+        // Verifica si todas las pingballs están fuera de los límites
         handleOutOfBounds();
 
+        // Verifica colisión de cada pingball con el paddle
         pingBallManager.handleBallPaddleCollision();
 
+        // Verifica colisión de cada pingball con los límites de la pantalla
         pingBallManager.handleBallScreen();
 
-        // Verificar game over
+        // Verifica game over
         handleGameOver();
 
         // Verificar si el nivel se terminó
         handleLevelFinished();
 
+        // Actualiza el estado de los powerups
         powerUpManager.update();
 
+        // Verifica colisión de cada pingball con los bloques
         verifyBlocksCollision();
     }
 
@@ -186,4 +198,3 @@ public class GameWorld
 
     public PingBallManager getPingBallManager() { return pingBallManager; }
 }
-

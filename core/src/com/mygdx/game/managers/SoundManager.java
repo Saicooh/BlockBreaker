@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -25,7 +25,8 @@ public class SoundManager
 
     public void play(String sound, float volume)
     {
-        switch (sound) {
+        switch (sound)
+        {
             case "powerup": powerUpSound.play(volume); break;
             case "collision": collisionSound.play(volume); break;
             case "gameover": gameOverSound.play(volume); break;

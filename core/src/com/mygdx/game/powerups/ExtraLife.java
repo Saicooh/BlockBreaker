@@ -1,7 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.GameWorld;
+import com.mygdx.game.PowerUp;
 
 public class ExtraLife extends PowerUp
 {

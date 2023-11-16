@@ -1,6 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.managers;
 
 import com.badlogic.gdx.graphics.Color;
+import com.mygdx.game.*;
+import com.mygdx.game.powerups.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -42,6 +44,7 @@ public class PowerUpManager
             case 4: newPowerUp = new DoublePingBall(this.gameWorld, x, y, 20, 20, Color.WHITE); break;
             case 5: newPowerUp = new FirePingBall(this.gameWorld, x, y, 20, 20, Color.ORANGE); break;
         }
+
         powerUpsCayendo.add(newPowerUp);
     }
 
@@ -64,16 +67,9 @@ public class PowerUpManager
         }
     }
 
-    public void limpiarPoderesCayendo()
-    {
-        // Limpia la lista de power-ups cayendo
-        powerUpsCayendo.clear();
-    }
+    public void limpiarPoderesCayendo() { powerUpsCayendo.clear(); } // Limpia la lista de power-ups cayendo
 
-    public void limpiarPoderesActivos()
-    {
-        powerUpsActivos.clear(); // Limpia la lista de power-ups activos
-    }
+    public void limpiarPoderesActivos() { powerUpsActivos.clear(); }// Limpia la lista de power-ups activos
 
     public void cancelAllTimers()
     {

@@ -1,7 +1,9 @@
-package com.mygdx.game;
+package com.mygdx.game.managers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.mygdx.game.GameWorld;
+import com.mygdx.game.PingBall;
 
 import java.util.ArrayList;
 import java.util.List;

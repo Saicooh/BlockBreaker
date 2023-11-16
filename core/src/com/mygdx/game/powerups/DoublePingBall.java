@@ -1,6 +1,8 @@
-package com.mygdx.game;
+package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
+import com.mygdx.game.GameWorld;
+import com.mygdx.game.PowerUp;
 
 public class DoublePingBall extends PowerUp
 {
