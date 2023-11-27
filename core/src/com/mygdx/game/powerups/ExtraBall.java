@@ -1,12 +1,12 @@
-package com.mygdx.game.powerups;
+/*package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.GameWorld;
 import com.mygdx.game.PowerUp;
 
-public class DoublePingBall extends PowerUp
+public class ExtraBall extends PowerUp
 {
-    public DoublePingBall(GameWorld game, int x, int y, int width, int height, Color color)
+    public ExtraBall(GameWorld game, int x, int y, int width, int height, Color color)
     {
         super(game, x, y, width, height, color, true);
     }
@@ -17,3 +17,4 @@ public class DoublePingBall extends PowerUp
         game.addBall(game.createBall(false, false));
     }
 }
+*/

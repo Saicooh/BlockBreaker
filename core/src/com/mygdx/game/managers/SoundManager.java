@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager
 {
+    private static SoundManager instance;
 
     private final Sound collisionSound;
     private final Sound gameOverSound;
@@ -13,7 +14,7 @@ public class SoundManager
     private final Sound finishSound;
     private final Sound powerUpSound;
 
-    public SoundManager()
+    private SoundManager()
     {
         collisionSound = Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3"));
         gameOverSound = Gdx.audio.newSound(Gdx.files.internal("sfx/gameover.wav"));
@@ -40,5 +41,11 @@ public class SoundManager
     {
         collisionSound.dispose();
         gameOverSound.dispose();
+    }
+
+    public static SoundManager getInstance()
+    {
+        if (instance == null) instance = new SoundManager();
+        return instance;
     }
 }

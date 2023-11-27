@@ -13,14 +13,10 @@ public class PingBallManager
 {
     private final List<PingBall> balls;
     private final GameWorld game;
-    private final CollisionManager collisionManager;
-    private final SoundManager soundManager;
 
-    public PingBallManager(GameWorld game, CollisionManager collisionManager, SoundManager soundManager)
+    public PingBallManager(GameWorld game)
     {
         this.game = game;
-        this.collisionManager = collisionManager;
-        this.soundManager = soundManager;
         balls = new ArrayList<>();
     }
 
@@ -81,10 +77,10 @@ public class PingBallManager
     {
         for (PingBall ball : balls)
         {
-            if (collisionManager.checkCollision(ball, game.getPad()))
+            if (CollisionManager.getInstance().checkCollision(ball, game.getPad()))
             {
                 ball.reverseYDirection();
-                soundManager.play("paddleHit2", 0.3f);
+                SoundManager.getInstance().play("paddleHit2", 0.3f);
             }
         }
     }

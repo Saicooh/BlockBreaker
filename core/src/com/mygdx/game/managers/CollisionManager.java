@@ -8,6 +8,10 @@ import com.mygdx.game.PingBall;
 public class CollisionManager
 {
 
+    private CollisionManager() {}
+
+    private static CollisionManager instance;
+
     private final Rectangle rect1 = new Rectangle();
     private final Rectangle rect2 = new Rectangle();
 
@@ -24,6 +28,12 @@ public class CollisionManager
             rect.set(obj.getX() - (float) obj.getWidth() / 2, obj.getY() - (float) obj.getHeight() / 2, obj.getWidth(), obj.getHeight());
 
         else rect.set(obj.getX(), obj.getY(), obj.getWidth(), obj.getHeight());
+    }
+
+    public static CollisionManager getInstance()
+    {
+        if (instance == null) instance = new CollisionManager();
+        return instance;
     }
 }
 

@@ -11,8 +11,6 @@ public class GameWorld
 
     private int vidas = VIDAS_INICIALES, puntaje = 0, nivel = 1, multiplicadorPuntaje = 1;
 
-    private final SoundManager soundManager;
-    private final CollisionManager collisionManager;
     private final BlockManager blockManager;
     private final PowerUpManager powerUpManager;
     private final PingBallManager pingBallManager;
@@ -31,17 +29,15 @@ public class GameWorld
 
         pad = new Paddle(Gdx.graphics.getWidth() / 2 - 50, 40, ANCHO_PADDLE, ALTO_PADDLE);
 
-        soundManager = new SoundManager();
-        collisionManager = new CollisionManager();
-        powerUpManager = new PowerUpManager(this, collisionManager, soundManager);
-        pingBallManager = new PingBallManager(this, collisionManager, soundManager);
+        powerUpManager = new PowerUpManager(this);
+        pingBallManager = new PingBallManager(this);
 
         pingBallManager.addBall(createBall(true, false));
     }
 
     private void resetGame()
     {
-        soundManager.play("gameover", 0.3f);
+        SoundManager.getInstance().play("gameover", 0.3f);
 
         resetGameStatus();
 
@@ -71,7 +67,7 @@ public class GameWorld
     {
         resetGameStatus();
         nivel++;
-        soundManager.play("finish", 0.3f);
+        SoundManager.getInstance().play("finish", 0.3f);
     }
 
     public void handleGameOver() { if (vidas == 0) resetGame(); }
@@ -110,7 +106,7 @@ public class GameWorld
     {
         for (PingBall ball : pingBallManager.getBallList())
         {
-            if (collisionManager.checkCollision(ball, block))
+            if (CollisionManager.getInstance().checkCollision(ball, block))
             {
                 handleBallBlockCollision(ball, block);
                 return true; // Indica que hubo una colisión y el bloque debe eliminarse
@@ -125,7 +121,7 @@ public class GameWorld
 
         if (!ball.isFire()) ball.reverseYDirection();
 
-        soundManager.play("collision", 0.3f);
+        SoundManager.getInstance().play("collision", 0.3f);
 
         puntaje += Math.max(multiplicadorPuntaje, 1);
     }
@@ -194,7 +190,8 @@ public class GameWorld
         this.multiplicadorPuntaje = multiplicadorPuntaje;
     }
 
-    public void dispose() { soundManager.dispose(); }
-
     public PingBallManager getPingBallManager() { return pingBallManager; }
+
+    public void dispose() {
+    }
 }

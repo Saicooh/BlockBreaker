@@ -1,4 +1,4 @@
-package com.mygdx.game.powerups;
+/*package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.GameWorld;
@@ -12,8 +12,6 @@ public class FirePingBall extends PowerUp
     }
 
     @Override
-    public void apply()
-    {
-        game.addBall(game.createBall(false, true));
-    }
+    public void apply() { game.addBall(game.createBall(false, true)); }
 }
+*/

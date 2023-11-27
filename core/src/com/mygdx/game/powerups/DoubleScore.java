@@ -1,4 +1,4 @@
-package com.mygdx.game.powerups;
+/*package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.GameWorld;
@@ -6,15 +6,16 @@ import com.mygdx.game.TimedPowerUp;
 
 public class DoubleScore extends TimedPowerUp
 {
-    public DoubleScore(GameWorld game, int x, int y, int width, int height, Color color)
+    public DoubleScore(GameWorld game, int x, int y, int width, int height, Color color, boolean isBuff)
     {
-        super(game, x, y, width, height, color, 10000, true);
+        super(game, x, y, width, height, color, 10000, isBuff);
     }
 
     @Override
     public void deactivate()
     {
-        game.setMultiplicadorPuntaje(game.getMultiplicadorPuntaje() / 2);
+        if (isBuff) game.setMultiplicadorPuntaje(game.getMultiplicadorPuntaje() / 2);
+        else game.setMultiplicadorPuntaje(game.getMultiplicadorPuntaje() * 2);
     }
 
     @Override
@@ -22,6 +23,9 @@ public class DoubleScore extends TimedPowerUp
     {
         startTimer();
         int multiplicadorActual = game.getMultiplicadorPuntaje();
-        game.setMultiplicadorPuntaje(2 * multiplicadorActual);
+
+        if (isBuff) game.setMultiplicadorPuntaje(2 * multiplicadorActual);
+        else game.setMultiplicadorPuntaje(multiplicadorActual / 2);
     }
 }
+*/

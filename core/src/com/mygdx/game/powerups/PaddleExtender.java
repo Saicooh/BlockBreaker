@@ -1,4 +1,4 @@
-package com.mygdx.game.powerups;
+/*package com.mygdx.game.powerups;
 
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.GameWorld;
@@ -21,3 +21,11 @@ public class PaddleExtender extends TimedPowerUp
     @Override
     public void deactivate() { game.setPaddleWidth(game.getPaddleWidth() - 50); }
 }
+
+// pelota explota
+
+// paddle pequeño
+
+// frenar paddle
+
+// invertir controles paddle/*/
