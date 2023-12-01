@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Block extends GameObject
 {
-    private boolean destroyed;
+    private final boolean destroyed;
 
     // Constructor privado para usar solo con el Builder
     private Block(Builder builder)
@@ -19,7 +19,7 @@ public class Block extends GameObject
     public static class Builder
     {
         private final int x, y, width, height;
-        private Color color;
+        private final Color color;
         private final boolean destroyed;
 
         public Builder(int x, int y, int width, int height)
@@ -30,12 +30,6 @@ public class Block extends GameObject
             this.height = height;
             this.color = randomColor(); // Valor por defecto
             this.destroyed = false;     // Valor por defecto
-        }
-
-        public Builder color(Color color)
-        {
-            this.color = color;
-            return this;
         }
 
         public Block build() { return new Block(this); }

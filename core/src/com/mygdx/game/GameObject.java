@@ -20,7 +20,7 @@ public abstract class GameObject implements Drawable
     }
 
     @Override
-    public void draw(ShapeRenderer shape) { }
+    public abstract void draw(ShapeRenderer shape);
 
     @Override
     public void drawSprite(SpriteBatch batch) { }
@@ -30,7 +30,5 @@ public abstract class GameObject implements Drawable
     public int getWidth() { return width; }
     public int getHeight() { return height; }
 
-    public void setX(int x) { this.x = x; }
-    public void setY(int y) { this.y = y; }
     public void setWidth(int width) { this.width = width; }
 }

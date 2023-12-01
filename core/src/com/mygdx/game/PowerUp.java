@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.interfaces.Movable;
 import com.mygdx.game.interfaces.PowerUpStrategy;
 
@@ -31,6 +32,13 @@ public class PowerUp extends GameObject implements Movable
     {
         this.x += deltaX;
         this.y += deltaY;
+    }
+
+    @Override
+    public void draw(ShapeRenderer shape)
+    {
+        shape.setColor(color);
+        shape.rect(x, y, width, height);
     }
 
     @Override

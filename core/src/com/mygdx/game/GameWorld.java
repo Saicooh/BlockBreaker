@@ -68,7 +68,7 @@ public class GameWorld
     private void increaseLevel()
     {
         resetGameStatus();
-        nivel += 2;
+        nivel++;
         SoundManager.getInstance().play("finish", 0.3f);
     }
 
@@ -89,7 +89,8 @@ public class GameWorld
         if (blockManager.verificarListaVacia())
         {
             increaseLevel();
-            blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
+            int newRows = 2 + nivel;
+            blockManager.createBlocks(newRows + 1, ANCHO_BLOQUE, ALTO_BLOQUE);
         }
     }
 
