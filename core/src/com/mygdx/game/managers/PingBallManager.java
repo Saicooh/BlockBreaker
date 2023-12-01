@@ -20,15 +20,9 @@ public class PingBallManager
         balls = new ArrayList<>();
     }
 
-    public void addBall(PingBall ball)
-    {
-        balls.add(ball);
-    }
+    public void addBall(PingBall ball) { balls.add(ball); }
 
-    public void cleanBallList()
-    {
-        balls.clear();
-    }
+    public void cleanBallList() { balls.clear(); }
 
     public void handleBallScreen()
     {

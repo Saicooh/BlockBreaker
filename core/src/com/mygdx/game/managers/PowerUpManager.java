@@ -1,6 +1,7 @@
 package com.mygdx.game.managers;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.game.*;
 import com.mygdx.game.estrategias.*;
 
@@ -24,7 +25,7 @@ public class PowerUpManager
 
     public void spawnPowerUp(int x, int y)
     {
-        if (Math.random() < 0.000001) return;
+        if (Math.random() < 0.15) return;
 
         Random random = new Random();
         boolean isBuff;
@@ -35,15 +36,26 @@ public class PowerUpManager
         isBuff = rand2 >= 10;
 
         PowerUp newPowerUp = null;
+        Sprite miSprite = null;
+
+        switch(rand)
+        {
+            case 1: if (isBuff) miSprite = new Sprite(AssetManager.getInstance().getExtraLifeTexture()); else miSprite = new Sprite(AssetManager.getInstance().getExtraLifeNerfTexture()); break;
+            case 2: if (isBuff) miSprite = new Sprite(AssetManager.getInstance().getDoubleScoreTexture()); else miSprite = new Sprite(AssetManager.getInstance().getDoubleScoreNerfTexture()); break;
+            case 3: if (isBuff) miSprite = new Sprite(AssetManager.getInstance().getPaddleExtenderTexture()); else miSprite = new Sprite(AssetManager.getInstance().getPaddleExtenderNerfTexture()); break;
+            case 4: miSprite = new Sprite(AssetManager.getInstance().getExtraBallTexture()); break;
+            case 5: miSprite = new Sprite(AssetManager.getInstance().getFireBallTexture()); break;
+            case 6: miSprite = new Sprite(AssetManager.getInstance().getLargePingBallTexture()); break;
+        }
 
         switch (rand)
         {
-            case 1: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.GREEN, isBuff, new ExtraLifeStrategy()); break;
-            case 2: newPowerUp = new TimedPowerUp(this.gameWorld, x, y, 20, 20, Color.YELLOW, 10000, isBuff, new DoubleScoreStrategy()); break;
-            case 3: newPowerUp = new TimedPowerUp(this.gameWorld, x, y, 20, 20, Color.BLUE, 10000, isBuff, new PaddleExtenderStrategy()); break;
-            case 4: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.WHITE, isBuff, new ExtraBallStrategy()); break;
-            case 5: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.ORANGE, isBuff, new FirePingBallStrategy()); break;
-            case 6: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.DARK_GRAY, isBuff, new LargePingBallStrategy()); break;
+            case 1: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.GREEN, isBuff, new ExtraLifeStrategy(), miSprite); break;
+            case 2: newPowerUp = new TimedPowerUp(this.gameWorld, x, y, 20, 20, Color.YELLOW, 10000, isBuff, new DoubleScoreStrategy(), miSprite); break;
+            case 3: newPowerUp = new TimedPowerUp(this.gameWorld, x, y, 20, 20, Color.BLUE, 10000, isBuff, new PaddleExtenderStrategy(), miSprite); break;
+            case 4: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.WHITE, isBuff, new ExtraBallStrategy(), miSprite); break;
+            case 5: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.ORANGE, isBuff, new FirePingBallStrategy(), miSprite); break;
+            case 6: newPowerUp = new PowerUp(this.gameWorld, x, y, 20, 20, Color.DARK_GRAY, isBuff, new LargePingBallStrategy(), miSprite); break;
         }
 
         powerUpsCayendo.add(newPowerUp);

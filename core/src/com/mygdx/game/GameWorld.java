@@ -9,7 +9,8 @@ public class GameWorld
 {
     private final Paddle pad;
 
-    private int vidas = VIDAS_INICIALES, puntaje = 0, nivel = 1, multiplicadorPuntaje = 1;
+    private int vidas = VIDAS_INICIALES, nivel = 1, multiplicadorPuntaje = 1;
+    private long puntaje = 0;
 
     private final BlockManager blockManager;
     private final PowerUpManager powerUpManager;
@@ -33,6 +34,8 @@ public class GameWorld
         pingBallManager = new PingBallManager(this);
 
         pingBallManager.addBall(createBall(true, false));
+        SoundManager.getInstance().play("background", 0.05f);
+        AssetManager.getInstance().loadAssets();
     }
 
     private void resetGame()
@@ -40,7 +43,8 @@ public class GameWorld
         SoundManager.getInstance().play("gameover", 0.3f);
 
         resetGameStatus();
-
+        vidas = VIDAS_INICIALES;
+        puntaje = 0;
         nivel = 1;
 
         blockManager.createBlocks(2 + nivel, ANCHO_BLOQUE, ALTO_BLOQUE);
@@ -50,8 +54,6 @@ public class GameWorld
     {
         cancelAllTimers();
 
-        vidas = VIDAS_INICIALES;
-        puntaje = 0;
         multiplicadorPuntaje = 1;
 
         pad.setWidth(ANCHO_PADDLE);
@@ -66,7 +68,7 @@ public class GameWorld
     private void increaseLevel()
     {
         resetGameStatus();
-        nivel++;
+        nivel += 2;
         SoundManager.getInstance().play("finish", 0.3f);
     }
 
@@ -135,7 +137,6 @@ public class GameWorld
 
     private void generatePowerUp(int x, int y) { powerUpManager.spawnPowerUp(x, y); }
 
-
     public void update()
     {
         // Maneja movimiento de paddle
@@ -168,7 +169,7 @@ public class GameWorld
 
     public Paddle getPad() { return pad; }
 
-    public int getPuntaje() { return puntaje; }
+    public long getPuntaje() { return puntaje; }
     public int getVidas() { return vidas; }
     public int getMultiplicadorPuntaje() { return multiplicadorPuntaje; }
     public int getPaddleWidth() { return pad.getWidth(); }

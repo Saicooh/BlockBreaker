@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.interfaces.Drawable;
 
@@ -19,7 +20,10 @@ public abstract class GameObject implements Drawable
     }
 
     @Override
-    public abstract void draw(ShapeRenderer shape);
+    public void draw(ShapeRenderer shape) { }
+
+    @Override
+    public void drawSprite(SpriteBatch batch) { }
 
     public int getX() { return x; }
     public int getY() { return y; }

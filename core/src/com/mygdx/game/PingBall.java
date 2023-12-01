@@ -62,17 +62,6 @@ public class PingBall extends GameObject implements Movable
 	}
 
     public void setSize(int i) { width = i; }
-
-	/*
-
-	public void setXSpeed(double xSpeed) { this.xSpeed = (int) xSpeed; }
-	public void setYSpeed(double ySpeed) { this.ySpeed = (int) ySpeed; }
-
-	public double getSpeed() { return Math.sqrt(xSpeed * xSpeed + ySpeed * ySpeed); }
-
-	pora futura implementacion de velocidad variable con trigonometría y ángulos de choque
-
-	*/
 }
 
 

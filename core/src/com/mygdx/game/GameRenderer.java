@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.managers.AssetManager;
 
 public class GameRenderer
 {
@@ -21,10 +23,10 @@ public class GameRenderer
     public GameRenderer(GameWorld world)
     {
         this.world = world;
+        this.batch = new SpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
         this.camera = new OrthographicCamera();
         this.camera.setToOrtho(false, CAMERA_WIDTH, CAMERA_HEIGHT);
-        this.batch = new SpriteBatch();
         this.font = new BitmapFont();
         this.font.getData().setScale(3, 2);
     }
@@ -32,23 +34,32 @@ public class GameRenderer
     public void render()
     {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        Sprite miSprite = new Sprite(AssetManager.getInstance().getBackgroundTexture());
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        batch.begin();
 
         // Dibuja el Paddle
         world.getPad().draw(shapeRenderer);
+
+        miSprite.setSize(2075, 1080);
+        miSprite.setAlpha(0.5f);
+        miSprite.draw(batch);
 
         // Dibuja la lista de pelotas
         for (PingBall ball : world.getPingBallManager().getBallList())
             ball.draw(shapeRenderer);
 
+        // Dibuja los powerups
+        for (PowerUp pu : world.getPowerUpManager().getPowerUpsCayendo())
+            pu.drawSprite(batch);
+
         // Dibuja los bloques
         for (Block b : world.getBlockManager().getBlocks())
             b.draw(shapeRenderer);
 
-        // Dibuja los powerups
-        for (PowerUp pu : world.getPowerUpManager().getPowerUpsCayendo())
-            pu.draw(shapeRenderer);
-
+        batch.end();
         shapeRenderer.end();
         dibujaTextos();
     }

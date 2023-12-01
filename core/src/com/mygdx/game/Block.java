@@ -2,36 +2,63 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+
 import java.util.Random;
 
 public class Block extends GameObject
 {
-    private boolean destroyed = false;
+    private boolean destroyed;
 
-    public Block(int x, int y, int width, int height)
+    // Constructor privado para usar solo con el Builder
+    private Block(Builder builder)
     {
-        super(x, y, width, height, randomColor());  // Pasamos un color aleatorio al constructor de GameObject
+        super(builder.x, builder.y, builder.width, builder.height, builder.color);
+        this.destroyed = builder.destroyed;
     }
 
-    private static Color randomColor()
+    public static class Builder
     {
-        Random rand = new Random();
-        float r = rand.nextFloat();
-        float g = rand.nextFloat();
-        float b = rand.nextFloat();
-        return new Color(r, g, b, 1);
+        private final int x, y, width, height;
+        private Color color;
+        private final boolean destroyed;
+
+        public Builder(int x, int y, int width, int height)
+        {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.color = randomColor(); // Valor por defecto
+            this.destroyed = false;     // Valor por defecto
+        }
+
+        public Builder color(Color color)
+        {
+            this.color = color;
+            return this;
+        }
+
+        public Block build() { return new Block(this); }
+
+        private static Color randomColor()
+        {
+            Random rand = new Random();
+            float r = rand.nextFloat();
+            float g = rand.nextFloat();
+            float b = rand.nextFloat();
+            return new Color(r, g, b, 1);
+        }
     }
 
+    @Override
     public void draw(ShapeRenderer shape)
     {
         if (!isDestroyed())
         {
-            shape.setColor(color);  // Usamos el color almacenado en lugar de un color fijo
-            shape.rect(getX(), getY(), getWidth(), getHeight());
+            shape.setColor(color);
+            shape.rect(x, y, width, height);
         }
     }
 
     public boolean isDestroyed() { return destroyed; }
-
-    public void setDestroyed(boolean destroyed) { this.destroyed = destroyed; }
 }

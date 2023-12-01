@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
-import com.mygdx.game.interfaces.PowerUpStrategy;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.mygdx.game.interfaces.TimedPowerUpStrategy;
 
 import java.util.Timer;
@@ -15,9 +15,9 @@ public class TimedPowerUp extends PowerUp
 
     protected TimedPowerUpStrategy timedStrategy;
 
-    public TimedPowerUp(GameWorld game, int x, int y, int width, int height, Color color, long duration, boolean isBuff, TimedPowerUpStrategy strategy)
+    public TimedPowerUp(GameWorld game, int x, int y, int width, int height, Color color, long duration, boolean isBuff, TimedPowerUpStrategy strategy, Sprite sprite)
     {
-        super(game, x, y, width, height, color, isBuff, strategy);
+        super(game, x, y, width, height, color, isBuff, strategy, sprite);
         this.duration = duration;
         this.timedStrategy = strategy;
     }

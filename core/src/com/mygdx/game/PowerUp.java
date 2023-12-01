@@ -1,7 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.interfaces.Movable;
 import com.mygdx.game.interfaces.PowerUpStrategy;
 
@@ -10,10 +11,11 @@ public class PowerUp extends GameObject implements Movable
     protected int speedY; // Velocidad vertical del modificador (caída).
     protected GameWorld game;
     protected boolean isBuff;
+    protected Sprite sprite;
 
     protected PowerUpStrategy strategy;
 
-    public PowerUp(GameWorld game, int x, int y, int width, int height, Color color, boolean isBuff, PowerUpStrategy strategy)
+    public PowerUp(GameWorld game, int x, int y, int width, int height, Color color, boolean isBuff, PowerUpStrategy strategy, Sprite sprite)
     {
         super(x, y, width, height, color); // Llama al constructor de GameObject.
         this.game = game;
@@ -21,6 +23,7 @@ public class PowerUp extends GameObject implements Movable
 
         this.isBuff = isBuff;
         this.strategy = strategy;
+        this.sprite = sprite;
     }
 
     @Override
@@ -31,12 +34,12 @@ public class PowerUp extends GameObject implements Movable
     }
 
     @Override
-    public void draw(ShapeRenderer shape)
+    public void drawSprite(SpriteBatch batch)
     {
-        if (!isBuff) color = Color.RED;
+        float xNew = x + x * 0.09f;
 
-        shape.setColor(color);
-        shape.circle(x, y, width);
+        sprite.setPosition(xNew, y);
+        sprite.draw(batch);
     }
 
     public void mover() { move(0, -speedY); } // Mover hacia abajo a la velocidad speedY.

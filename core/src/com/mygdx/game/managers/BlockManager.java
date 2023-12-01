@@ -21,7 +21,7 @@ public class BlockManager
             y -= (blockHeight + 10);
 
             for (int x = 5; x < Gdx.graphics.getWidth(); x += (blockWidth + 10))
-                blocks.add(new Block(x, y, blockWidth, blockHeight));
+                blocks.add(new Block.Builder(x, y, blockWidth, blockHeight).build());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.mygdx.game.managers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 public class SoundManager
@@ -14,6 +15,8 @@ public class SoundManager
     private final Sound finishSound;
     private final Sound powerUpSound;
 
+    private final Music backgroundMusic;
+
     private SoundManager()
     {
         collisionSound = Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3"));
@@ -22,6 +25,8 @@ public class SoundManager
         paddleHitSound2 = Gdx.audio.newSound(Gdx.files.internal("sfx/paddlehit2.wav"));
         finishSound = Gdx.audio.newSound(Gdx.files.internal("sfx/finish.wav"));
         powerUpSound = Gdx.audio.newSound(Gdx.files.internal("sfx/powerup.mp3"));
+
+        backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/windgodgirl.mp3"));
     }
 
     public void play(String sound, float volume)
@@ -34,6 +39,7 @@ public class SoundManager
             case "paddleHit": paddleHitSound.play(volume); break;
             case "paddleHit2": paddleHitSound2.play(volume); break;
             case "finish": finishSound.play(volume); break;
+            case "background": backgroundMusic.setLooping(true); backgroundMusic.setVolume(volume); backgroundMusic.play(); break;
         }
     }
 
